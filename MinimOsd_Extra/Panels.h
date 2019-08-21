@@ -502,16 +502,17 @@ static void panHorizon(point p){
 // Size   : 
 // Staus  : done
 
-static void panCOG(point p){
+static void panCOG(point p) {
 
-    int cog_100=(osd_cog + 50) / 100 - osd_heading;
+	cog_100 = (osd_cog + 50) / 100;
 
-    off_course = normalize_angle(cog_100)-180;   // -180..180
+	off_course = normalize_angle(cog_100 - osd_heading);   // -180..180
 
-    showArrow(off_course+180); 
-    osd_printi_1(PSTR("%4i\x05"), off_course);
+	showArrow(off_course);
+	osd_printi_1(PSTR("%4i\x05"), off_course > 180 ? off_course - 360 : off_course); // cog_100);
 
 }
+
 
 static const PROGMEM char f5_2f[]="%5.2f";
 static const PROGMEM char f4_2f[]="%4.2f";
@@ -1754,6 +1755,10 @@ const char PROGMEM p_mode16[] = "init"; //initializing
 const char PROGMEM p_mode17[] = "qstb"; //quad-stabilize
 const char PROGMEM p_mode18[] = "qhov"; //quad-hover (alt-hold)
 const char PROGMEM p_mode19[] = "qloi"; //quad-loiter
+const char PROGMEM p_mode20[] = "qlnd"; //quad-land
+const char PROGMEM p_mode21[] = "qrtl"; //quad-rtl
+const char PROGMEM p_mode22[] = "qatn"; //quad-autotune
+const char PROGMEM p_mode23[] = "qacr"; //quad-acro
 
 
 #if defined(USE_MAVLINKPX4)
@@ -1813,27 +1818,36 @@ const char PROGMEM p_mode19[] = "qloi"; //quad-loiter
 
 /*
 plane modes
-    MANUAL        = 0,
-    CIRCLE        = 1,
-    STABILIZE     = 2,
-    TRAINING      = 3,
-    ACRO          = 4,
-    FLY_BY_WIRE_A = 5,
-    FLY_BY_WIRE_B = 6,
-    CRUISE        = 7,
-    AUTOTUNE      = 8,
-    AUTO          = 10,
-    RTL           = 11,
-    LOITER        = 12,
-    GUIDED        = 15,
-    INITIALISING  = 16
+		MANUAL        = 0,
+        CIRCLE        = 1,
+        STABILIZE     = 2,
+        TRAINING      = 3,
+        ACRO          = 4,
+        FLY_BY_WIRE_A = 5,
+        FLY_BY_WIRE_B = 6,
+        CRUISE        = 7,
+        AUTOTUNE      = 8,
+        AUTO          = 10,
+        RTL           = 11,
+        LOITER        = 12,
+        AVOID_ADSB    = 14,
+        GUIDED        = 15,
+        INITIALISING  = 16,
+        QSTABILIZE    = 17,
+        QHOVER        = 18,
+        QLOITER       = 19,
+        QLAND         = 20,
+        QRTL          = 21,
+        QAUTOTUNE     = 22,
+        QACRO         = 23,
 */
  #ifdef IS_PLANE
  const char * const mode_p_strings[] PROGMEM ={ 
     p_m_manu, s_m_circ, s_m_stab, p_mode03, s_m_acro, 
     p_mode05, p_mode06, p_mode07, p_mode08, s_mode_n,
     s_m_auto, s_m__rtl, s_m_loit, s_mode_n, s_mode_n, 
-    s_m_guid, p_mode16, p_mode17, p_mode18, p_mode19
+    s_m_guid, p_mode16, p_mode17, p_mode18, p_mode19,
+	p_mode20, p_mode21, p_mode22, p_mode23
  };
  #endif
 #endif
